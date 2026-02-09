@@ -153,8 +153,10 @@ class EventHandler(BaseEventHandler):
         return True
 
     def ev_mousemotion(self, event: tcod.event.MouseMotion) -> None:
-        if self.engine.game_map.in_bounds(event.tile.x, event.tile.y):
-            self.engine.mouse_location = event.tile.x, event.tile.y
+        # Convert tile coordinates to integers (event.tile returns floats)
+        tile_x, tile_y = int(event.tile.x), int(event.tile.y)
+        if self.engine.game_map.in_bounds(tile_x, tile_y):
+            self.engine.mouse_location = tile_x, tile_y
 
     def on_render(self, console: tcod.Console) -> None:
         self.engine.render(console)
@@ -418,8 +420,6 @@ class SelectIndexHandler(AskUserEventHandler):
         """Highlight the tile under the cursor."""
         super().on_render(console)
         x, y = self.engine.mouse_location
-        # Convert to int to handle float coordinates from mouse events
-        x, y = int(x), int(y)
         console.tiles_rgb["bg"][x, y] = color.white
         console.tiles_rgb["fg"][x, y] = color.black
 
@@ -505,8 +505,6 @@ class AreaRangedAttackHandler(SelectIndexHandler):
         super().on_render(console)
 
         x, y = self.engine.mouse_location
-        # Convert to int to handle float coordinates from mouse events
-        x, y = int(x), int(y)
 
         # Draw a rectangle around the targeted area, so the player can see the affected tiles.
         console.draw_frame(
