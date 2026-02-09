@@ -418,6 +418,8 @@ class SelectIndexHandler(AskUserEventHandler):
         """Highlight the tile under the cursor."""
         super().on_render(console)
         x, y = self.engine.mouse_location
+        # Convert to int to handle float coordinates from mouse events
+        x, y = int(x), int(y)
         console.tiles_rgb["bg"][x, y] = color.white
         console.tiles_rgb["fg"][x, y] = color.black
 
@@ -450,9 +452,11 @@ class SelectIndexHandler(AskUserEventHandler):
         self, event: tcod.event.MouseButtonDown
     ) -> Optional[ActionOrHandler]:
         """Left click confirms a selection."""
-        if self.engine.game_map.in_bounds(*event.tile):
+        # Convert tile coordinates to integers
+        tile_x, tile_y = int(event.tile.x), int(event.tile.y)
+        if self.engine.game_map.in_bounds(tile_x, tile_y):
             if event.button == 1:
-                return self.on_index_selected(*event.tile)
+                return self.on_index_selected(tile_x, tile_y)
         return super().ev_mousebuttondown(event)
 
     def on_index_selected(self, x: int, y: int) -> Optional[ActionOrHandler]:
@@ -501,6 +505,8 @@ class AreaRangedAttackHandler(SelectIndexHandler):
         super().on_render(console)
 
         x, y = self.engine.mouse_location
+        # Convert to int to handle float coordinates from mouse events
+        x, y = int(x), int(y)
 
         # Draw a rectangle around the targeted area, so the player can see the affected tiles.
         console.draw_frame(
