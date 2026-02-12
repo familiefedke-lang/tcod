@@ -22,18 +22,21 @@ FINAL_FLOOR = 10  # The floor where the amulet spawns
 max_items_by_floor = [
     (1, 1),
     (4, 2),
+    (8, 3),
 ]
 
 max_monsters_by_floor = [
     (1, 2),
     (4, 3),
     (6, 5),
+    (8, 7),
 ]
 
 max_traps_by_floor = [
     (1, 1),
     (3, 2),
     (5, 3),
+    (7, 4),
 ]
 
 max_buildings_by_floor = [
@@ -56,15 +59,15 @@ enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
 }
 
 trap_chances: Dict[int, List[Tuple[Entity, int]]] = {
-    0: [(entity_factories.spike_trap, 60)],
-    2: [(entity_factories.arrow_trap, 30)],
-    4: [(entity_factories.fire_trap, 20)],
+    0: [(entity_factories.spike_trap, 50)],
+    2: [(entity_factories.arrow_trap, 40)],
+    4: [(entity_factories.fire_trap, 30)],
 }
 
 building_chances: Dict[int, List[Tuple[Entity, int]]] = {
-    0: [(entity_factories.fountain, 40)],
+    0: [(entity_factories.fountain, 50)],
     2: [(entity_factories.shop, 30)],
-    4: [(entity_factories.altar, 20)],
+    4: [(entity_factories.altar, 25)],
 }
 
 

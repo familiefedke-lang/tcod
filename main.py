@@ -27,10 +27,10 @@ def main() -> None:
     # Columns = 8, Rows = 2
     # The 'range(16)' tells tcod to map indices 0 through 15 to the tiles
     tileset = tcod.tileset.load_tilesheet(
-        "tiles3.png", 
+        "dejavu10x10_gs_tc.png", 
+        32, 
         8, 
-        2, 
-        range(8 * 2)
+        tcod.tileset.CHARMAP_TCOD
     )
 
     event_handler = EventHandler()
