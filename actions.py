@@ -195,6 +195,14 @@ class BumpAction(ActionWithDirection):
     def perform(self) -> None:
         if self.target_actor:
             return MeleeAction(self.entity, self.dx, self.dy).perform()
-
         else:
+            # Check if there's a building to interact with
+            from entity import BuildingEntity
+            dest_x, dest_y = self.dest_xy
+            for entity in self.engine.game_map.entities:
+                if isinstance(entity, BuildingEntity) and entity.x == dest_x and entity.y == dest_y:
+                    if entity.building:
+                        entity.building.interact(self.entity)
+                    return
+            
             return MovementAction(self.entity, self.dx, self.dy).perform()

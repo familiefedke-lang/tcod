@@ -36,6 +36,11 @@ max_traps_by_floor = [
     (5, 3),
 ]
 
+max_buildings_by_floor = [
+    (1, 1),
+    (5, 2),
+]
+
 item_chances: Dict[int, List[Tuple[Entity, int]]] = {
     0: [(entity_factories.health_potion, 35)],
     2: [(entity_factories.confusion_scroll, 10)],
@@ -54,6 +59,12 @@ trap_chances: Dict[int, List[Tuple[Entity, int]]] = {
     0: [(entity_factories.spike_trap, 60)],
     2: [(entity_factories.arrow_trap, 30)],
     4: [(entity_factories.fire_trap, 20)],
+}
+
+building_chances: Dict[int, List[Tuple[Entity, int]]] = {
+    0: [(entity_factories.fountain, 40)],
+    2: [(entity_factories.shop, 30)],
+    4: [(entity_factories.altar, 20)],
 }
 
 
@@ -137,6 +148,9 @@ def place_entities(room: RectangularRoom, dungeon: GameMap, floor_number: int,) 
     number_of_traps = random.randint(
         0, get_max_value_for_floor(max_traps_by_floor, floor_number)
     )
+    number_of_buildings = random.randint(
+        0, get_max_value_for_floor(max_buildings_by_floor, floor_number)
+    )
 
     monsters: List[Entity] = get_entities_at_random(
         enemy_chances, number_of_monsters, floor_number
@@ -147,8 +161,11 @@ def place_entities(room: RectangularRoom, dungeon: GameMap, floor_number: int,) 
     traps: List[Entity] = get_entities_at_random(
         trap_chances, number_of_traps, floor_number
     )
+    buildings: List[Entity] = get_entities_at_random(
+        building_chances, number_of_buildings, floor_number
+    )
 
-    for entity in monsters + items + traps:
+    for entity in monsters + items + traps + buildings:
         x = random.randint(room.x1 + 1, room.x2 - 1)
         y = random.randint(room.y1 + 1, room.y2 - 1)
 

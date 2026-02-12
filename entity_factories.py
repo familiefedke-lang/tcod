@@ -5,7 +5,8 @@ from components.fighter import Fighter
 from components.inventory import Inventory
 from components.level import Level
 from components.trap import Trap
-from entity import Actor, Item, TrapEntity
+from components.building import Building
+from entity import Actor, Item, TrapEntity, BuildingEntity
 
 
 player = Actor(
@@ -111,4 +112,26 @@ amulet_of_yendor = Item(
     name="Amulet of Yendor",
     consumable=None,
     equippable=None,
+)
+
+# Buildings
+shop = BuildingEntity(
+    char="$",
+    color=(255, 215, 0),
+    name="Shop",
+    building=Building(building_type="shop", description="A small shop"),
+)
+
+altar = BuildingEntity(
+    char="Ω",
+    color=(200, 200, 255),
+    name="Altar",
+    building=Building(building_type="altar", description="A sacred altar"),
+)
+
+fountain = BuildingEntity(
+    char="♠",
+    color=(100, 150, 255),
+    name="Fountain",
+    building=Building(building_type="fountain", description="A healing fountain"),
 )
