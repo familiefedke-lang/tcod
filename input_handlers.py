@@ -125,6 +125,12 @@ class EventHandler(BaseEventHandler):
             return action_or_state
         if self.handle_action(action_or_state):
             # A valid action was performed.
+            
+            # Check if player has won (has the Amulet of Yendor)
+            for item in self.engine.player.inventory.items:
+                if item.name == "Amulet of Yendor":
+                    return GameWonEventHandler(self.engine)
+            
             if not self.engine.player.is_alive:
                 # The player was killed sometime during or after the action.
                 return GameOverEventHandler(self.engine)
@@ -574,6 +580,50 @@ class GameOverEventHandler(EventHandler):
     def ev_keydown(self, event: tcod.event.KeyDown) -> None:
         if event.sym == tcod.event.K_ESCAPE:
             self.on_quit()
+
+
+class GameWonEventHandler(EventHandler):
+    """Event handler for when the player wins the game."""
+    
+    def on_quit(self) -> None:
+        """Handle exiting out of a won game."""
+        if os.path.exists("savegame.sav"):
+            os.remove("savegame.sav")  # Deletes the active save file.
+        raise exceptions.QuitWithoutSaving()  # Avoid saving a finished game.
+
+    def ev_quit(self, event: tcod.event.Quit) -> None:
+        self.on_quit()
+
+    def ev_keydown(self, event: tcod.event.KeyDown) -> None:
+        if event.sym == tcod.event.K_ESCAPE:
+            self.on_quit()
+
+    def on_render(self, console: tcod.Console) -> None:
+        """Render the victory screen."""
+        super().on_render(console)
+        
+        # Display victory message
+        console.print(
+            console.width // 2,
+            console.height // 2 - 2,
+            "VICTORY!",
+            fg=color.player_atk,
+            alignment=tcod.CENTER,
+        )
+        console.print(
+            console.width // 2,
+            console.height // 2,
+            "You have retrieved the Amulet of Yendor!",
+            fg=color.white,
+            alignment=tcod.CENTER,
+        )
+        console.print(
+            console.width // 2,
+            console.height // 2 + 2,
+            "Press ESC to quit.",
+            fg=color.white,
+            alignment=tcod.CENTER,
+        )
 
 
 CURSOR_Y_KEYS = {

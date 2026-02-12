@@ -4,7 +4,9 @@ from components.equipment import Equipment
 from components.fighter import Fighter
 from components.inventory import Inventory
 from components.level import Level
-from entity import Actor, Item
+from components.trap import Trap
+from components.building import Building
+from entity import Actor, Item, TrapEntity, BuildingEntity
 
 
 player = Actor(
@@ -79,4 +81,57 @@ leather_armor = Item(
 
 chain_mail = Item(
     char="[", color=(139, 69, 19), name="Chain Mail", equippable=equippable.ChainMail()
+)
+
+# Traps
+spike_trap = TrapEntity(
+    char="^",
+    color=(150, 150, 150),
+    name="Spike Trap",
+    trap=Trap(damage=5, trap_type="spike"),
+)
+
+arrow_trap = TrapEntity(
+    char="^",
+    color=(180, 140, 100),
+    name="Arrow Trap",
+    trap=Trap(damage=8, trap_type="arrow"),
+)
+
+fire_trap = TrapEntity(
+    char="^",
+    color=(255, 100, 0),
+    name="Fire Trap",
+    trap=Trap(damage=10, trap_type="fire"),
+)
+
+# Win condition item
+amulet_of_yendor = Item(
+    char="*",
+    color=(255, 215, 0),
+    name="Amulet of Yendor",
+    consumable=None,
+    equippable=None,
+)
+
+# Buildings
+shop = BuildingEntity(
+    char="$",
+    color=(255, 215, 0),
+    name="Shop",
+    building=Building(building_type="shop", description="A small shop"),
+)
+
+altar = BuildingEntity(
+    char="Ω",
+    color=(200, 200, 255),
+    name="Altar",
+    building=Building(building_type="altar", description="A sacred altar"),
+)
+
+fountain = BuildingEntity(
+    char="♠",
+    color=(100, 150, 255),
+    name="Fountain",
+    building=Building(building_type="fountain", description="A healing fountain"),
 )

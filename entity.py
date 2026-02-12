@@ -14,6 +14,8 @@ if TYPE_CHECKING:
     from components.fighter import Fighter
     from components.inventory import Inventory
     from components.level import Level
+    from components.trap import Trap as TrapComponent
+    from components.building import Building as BuildingComponent
     from game_map import GameMap
 
 T = TypeVar("T", bound="Entity")
@@ -161,3 +163,61 @@ class Item(Entity):
 
         if self.equippable:
             self.equippable.parent = self
+
+
+class TrapEntity(Entity):
+    """An entity representing a trap on the map."""
+    
+    def __init__(
+        self,
+        *,
+        x: int = 0,
+        y: int = 0,
+        char: str = "^",
+        color: Tuple[int, int, int] = (255, 0, 0),
+        name: str = "<Unnamed Trap>",
+        trap: Optional[TrapComponent] = None,
+    ):
+        super().__init__(
+            x=x,
+            y=y,
+            char=char,
+            color=color,
+            name=name,
+            blocks_movement=False,
+            render_order=RenderOrder.ITEM,  # Traps render at item level
+        )
+        
+        self.trap = trap
+        
+        if self.trap:
+            self.trap.parent = self
+
+
+class BuildingEntity(Entity):
+    """An entity representing a building on the map."""
+    
+    def __init__(
+        self,
+        *,
+        x: int = 0,
+        y: int = 0,
+        char: str = "B",
+        color: Tuple[int, int, int] = (200, 200, 0),
+        name: str = "<Unnamed Building>",
+        building: Optional[BuildingComponent] = None,
+    ):
+        super().__init__(
+            x=x,
+            y=y,
+            char=char,
+            color=color,
+            name=name,
+            blocks_movement=True,  # Buildings block movement
+            render_order=RenderOrder.ACTOR,  # Buildings render at actor level
+        )
+        
+        self.building = building
+        
+        if self.building:
+            self.building.parent = self

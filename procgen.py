@@ -15,15 +15,33 @@ if TYPE_CHECKING:
     from entity import Entity
 
 
+# Game constants
+FINAL_FLOOR = 10  # The floor where the amulet spawns
+
+
 max_items_by_floor = [
     (1, 1),
     (4, 2),
+    (8, 3),
 ]
 
 max_monsters_by_floor = [
     (1, 2),
     (4, 3),
     (6, 5),
+    (8, 7),
+]
+
+max_traps_by_floor = [
+    (1, 1),
+    (3, 2),
+    (5, 3),
+    (7, 4),
+]
+
+max_buildings_by_floor = [
+    (1, 1),
+    (5, 2),
 ]
 
 item_chances: Dict[int, List[Tuple[Entity, int]]] = {
@@ -38,6 +56,18 @@ enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
     3: [(entity_factories.troll, 15)],
     5: [(entity_factories.troll, 30)],
     7: [(entity_factories.troll, 60)],
+}
+
+trap_chances: Dict[int, List[Tuple[Entity, int]]] = {
+    0: [(entity_factories.spike_trap, 50)],
+    2: [(entity_factories.arrow_trap, 40)],
+    4: [(entity_factories.fire_trap, 30)],
+}
+
+building_chances: Dict[int, List[Tuple[Entity, int]]] = {
+    0: [(entity_factories.fountain, 50)],
+    2: [(entity_factories.shop, 30)],
+    4: [(entity_factories.altar, 25)],
 }
 
 
@@ -118,6 +148,12 @@ def place_entities(room: RectangularRoom, dungeon: GameMap, floor_number: int,) 
     number_of_items = random.randint(
         0, get_max_value_for_floor(max_items_by_floor, floor_number)
     )
+    number_of_traps = random.randint(
+        0, get_max_value_for_floor(max_traps_by_floor, floor_number)
+    )
+    number_of_buildings = random.randint(
+        0, get_max_value_for_floor(max_buildings_by_floor, floor_number)
+    )
 
     monsters: List[Entity] = get_entities_at_random(
         enemy_chances, number_of_monsters, floor_number
@@ -125,8 +161,14 @@ def place_entities(room: RectangularRoom, dungeon: GameMap, floor_number: int,) 
     items: List[Entity] = get_entities_at_random(
         item_chances, number_of_items, floor_number
     )
+    traps: List[Entity] = get_entities_at_random(
+        trap_chances, number_of_traps, floor_number
+    )
+    buildings: List[Entity] = get_entities_at_random(
+        building_chances, number_of_buildings, floor_number
+    )
 
-    for entity in monsters + items:
+    for entity in monsters + items + traps + buildings:
         x = random.randint(room.x1 + 1, room.x2 - 1)
         y = random.randint(room.y1 + 1, room.y2 - 1)
 
@@ -205,5 +247,12 @@ def generate_dungeon(
 
         # Finally, append the new room to the list.
         rooms.append(new_room)
+
+    # Spawn the Amulet of Yendor on the final floor
+    if engine.game_world.current_floor == FINAL_FLOOR and rooms:
+        last_room = rooms[-1]
+        amulet_x = last_room.center[0]
+        amulet_y = last_room.center[1]
+        entity_factories.amulet_of_yendor.spawn(dungeon, amulet_x, amulet_y)
 
     return dungeon

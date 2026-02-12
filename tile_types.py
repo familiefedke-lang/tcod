@@ -45,3 +45,11 @@ wall = new_tile(
     dark=(7, (100, 100, 100), (0, 0, 0)),
     light=(7, (255, 255, 255), (0, 0, 0)),
 )
+
+# Down stairs: use '>' character
+down_stairs = new_tile(
+    walkable=True,
+    transparent=True,
+    dark=(ord('>'), (100, 100, 100), (0, 0, 0)),
+    light=(ord('>'), (255, 255, 0), (0, 0, 0)),
+)
