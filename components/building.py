@@ -54,6 +54,13 @@ class Building(BaseComponent):
     
     def _altar_interaction(self, actor: Actor) -> None:
         """Altar interaction - restore HP fully."""
+        if self.used:
+            self.engine.message_log.add_message(
+                "The altar's power has already been used.",
+                color.white
+            )
+            return
+            
         if actor.fighter.hp < actor.fighter.max_hp:
             heal_amount = actor.fighter.max_hp - actor.fighter.hp
             actor.fighter.hp = actor.fighter.max_hp
@@ -66,7 +73,7 @@ class Building(BaseComponent):
             self.parent.color = (100, 100, 100)
         else:
             self.engine.message_log.add_message(
-                "The altar's power has already been used.",
+                "You are already at full health.",
                 color.white
             )
     

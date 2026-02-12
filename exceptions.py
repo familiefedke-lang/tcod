@@ -7,7 +7,3 @@ class Impossible(Exception):
 
 class QuitWithoutSaving(SystemExit):
     """Can be raised to exit the game without automatically saving."""
-
-
-class GameWon(Exception):
-    """Exception raised when the player wins the game."""

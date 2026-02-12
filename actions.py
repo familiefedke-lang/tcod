@@ -185,10 +185,10 @@ class MovementAction(ActionWithDirection):
         
         # Check for traps at the new location
         from entity import TrapEntity
-        for entity in self.engine.game_map.entities:
-            if isinstance(entity, TrapEntity) and entity.x == dest_x and entity.y == dest_y:
-                if entity.trap and not entity.trap.triggered:
-                    entity.trap.trigger(self.entity)
+        for entity in self.engine.game_map.get_entities_at_location(dest_x, dest_y):
+            if isinstance(entity, TrapEntity) and entity.trap and not entity.trap.triggered:
+                entity.trap.trigger(self.entity)
+                break
 
 
 class BumpAction(ActionWithDirection):
@@ -199,10 +199,9 @@ class BumpAction(ActionWithDirection):
             # Check if there's a building to interact with
             from entity import BuildingEntity
             dest_x, dest_y = self.dest_xy
-            for entity in self.engine.game_map.entities:
-                if isinstance(entity, BuildingEntity) and entity.x == dest_x and entity.y == dest_y:
-                    if entity.building:
-                        entity.building.interact(self.entity)
+            for entity in self.engine.game_map.get_entities_at_location(dest_x, dest_y):
+                if isinstance(entity, BuildingEntity) and entity.building:
+                    entity.building.interact(self.entity)
                     return
             
             return MovementAction(self.entity, self.dx, self.dy).perform()
