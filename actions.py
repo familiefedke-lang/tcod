@@ -182,6 +182,13 @@ class MovementAction(ActionWithDirection):
             raise exceptions.Impossible("That way is blocked.")
 
         self.entity.move(self.dx, self.dy)
+        
+        # Check for traps at the new location
+        from entity import TrapEntity
+        for entity in self.engine.game_map.entities:
+            if isinstance(entity, TrapEntity) and entity.x == dest_x and entity.y == dest_y:
+                if entity.trap and not entity.trap.triggered:
+                    entity.trap.trigger(self.entity)
 
 
 class BumpAction(ActionWithDirection):
